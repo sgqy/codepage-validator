@@ -11,6 +11,11 @@
 			"request": "launch",
 			"runtimeExecutable": "${execPath}",
 			"args": [
+				"--extensions-dir=/dev/shm",
+				// Sample text file with Unicode characters
+				"${workspaceFolder}/sample.txt",
+				// This extension should NOT start for other file content type
+				// "${workspaceFolder}/sample.png",
 				"--extensionDevelopmentPath=${workspaceFolder}"
 			],
 			"outFiles": [
@@ -25,7 +30,8 @@
 			"runtimeExecutable": "${execPath}",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}",
-				"--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
+				"--extensionTestsPath=${workspaceFolder}/out/test/suite/index",
+				"--extensions-dir=/dev/shm"
 			],
 			"outFiles": [
 				"${workspaceFolder}/out/test/**/*.js"

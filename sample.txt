@@ -1,0 +1,9 @@
+
+// this should be errors in cp932/sjis
+zh-cn: 今天你吃饭了吗？一起去下个馆子吧？我们大家都饿了。
+
+// this should be errors in cp936/gbk
+ja-jp: 音楽・ダンスが一番たっのしい♪運命・実力はとっても重要だと♪
+
+// all of them should be errors in cp437/iso-8859-1
+(´・ω・｀)

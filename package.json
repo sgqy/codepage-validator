@@ -2,22 +2,54 @@
 	"name": "codepage-validator",
 	"displayName": "Codepage Validator",
 	"description": "Check if the content in edit matches to the file encoding.",
+	"publisher": "sgqy",
+	"repository": {
+		"url": "https://github.com/sgqy/codepage-validator"
+	},
 	"version": "0.0.1",
 	"engines": {
-		"vscode": "^1.41.0"
+		"vscode": "^1.0.0"
 	},
 	"categories": [
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.helloWorld"
+		"onCommand:extension.validateCodepage",
+		"onLanguage:plaintext"
 	],
-	"main": "./out/extension.js",
+	"main": "./out/main.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.helloWorld",
-				"title": "Hello World"
+				"command": "extension.validateCodepage",
+				"title": "Validate Codepage"
+			}
+		],
+		"configuration":[
+			{
+				"title": "Codepage Validator",
+				"properties": {
+					"codepageValidator.Charset": {
+						"type": "string",
+						"default": "sjis",
+						"description": "Set the codepage you want to test"
+					},
+					"codepageValidator.Style.Foreground": {
+						"type": "string",
+						"default": "#f00f",
+						"description": "Format: #RGB, #RGBA, #RRGGBB, #RRGGBBAA"
+					},
+					"codepageValidator.Style.Background": {
+						"type": "string",
+						"default": "#fff0",
+						"description": "Format: #RGB, #RGBA, #RRGGBB, #RRGGBBAA"
+					},
+					"codepageValidator.RealTime": {
+						"type": "boolean",
+						"default": true,
+						"description": "Validate codepage when modifying text (Need reload)"
+					}
+				}
 			}
 		]
 	},
@@ -32,11 +64,14 @@
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^5.2.7",
 		"@types/node": "^12.11.7",
-		"@types/vscode": "^1.41.0",
+		"@types/vscode": "^1.0.0",
 		"glob": "^7.1.5",
 		"mocha": "^6.2.2",
 		"typescript": "^3.6.4",
 		"tslint": "^5.20.0",
 		"vscode-test": "^1.2.2"
+	},
+	"dependencies": {
+		"iconv-lite": "^0.5.0"
 	}
 }
