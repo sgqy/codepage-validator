@@ -6,7 +6,7 @@ Check if the text works in _given_ charset/codepage/encoding. If not, the plugin
 
 Steps:
 1. Open a text file.
-2. Set the charset you want to match.
+2. Use the document encoding automatically or set the charset you want to match manually.
 3. Non-compatible characters will be highlighted (for example, red).
 
 ![Demo GIF](images/demo.gif)
@@ -15,6 +15,7 @@ Steps:
 
 Target encoding:
 * `codepageValidator.Charset` → `Shift_JIS`
+* `codepageValidator.UseDocumentEncoding` → `true`
 
 Highlight text style:
 * `codepageValidator.Style.Foreground` → `red`
@@ -25,7 +26,6 @@ Validate when editing:
 
 ## Known Issues
 
-* [Upstream](https://github.com/microsoft/vscode/issues/824): It is _impossible_ to add an option auto picking the encoding.
 * The compatible version is not tested. This plugin may work or not work on vscode older than 1.41.0.
 
 ## Release Notes

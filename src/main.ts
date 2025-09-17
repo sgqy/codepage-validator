@@ -34,8 +34,9 @@ function processText(textEditor: vscode.TextEditor | undefined) {
                 return;
         }
         // init decoration style
-        const fc: string = vscode.workspace.getConfiguration().get(`codepageValidator.Style.Foreground`) || `#0f0f`; // green
-        const bc: string = vscode.workspace.getConfiguration().get(`codepageValidator.Style.Background`) || `#cccf`; // grey
+        const configuration = vscode.workspace.getConfiguration();
+        const fc: string = configuration.get(`codepageValidator.Style.Foreground`) || `#0f0f`; // green
+        const bc: string = configuration.get(`codepageValidator.Style.Background`) || `#cccf`; // grey
 
         // clean decoration
         if (deco) {
@@ -44,7 +45,14 @@ function processText(textEditor: vscode.TextEditor | undefined) {
         deco = vscode.window.createTextEditorDecorationType({ color: fc, backgroundColor: bc });
 
         // generate list
-        const cp: string = vscode.workspace.getConfiguration().get(`codepageValidator.Charset`) || `utf8`;
+        let cp: string = configuration.get(`codepageValidator.Charset`) || `utf8`;
+        const useDocumentEncoding = configuration.get<boolean>(`codepageValidator.UseDocumentEncoding`);
+        if (useDocumentEncoding) {
+                const documentEncoding = (textEditor.document as { encoding?: string }).encoding;
+                if (documentEncoding) {
+                        cp = documentEncoding;
+                }
+        }
         // status bar
         if (statusBarItem) {
                 statusBarItem.text = `Checking Codepage: ` + cp;
