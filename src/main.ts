@@ -10,8 +10,9 @@ export function activate(context: vscode.ExtensionContext) {
 	// auto trigger
 	const is_realtime = vscode.workspace.getConfiguration().get(`codepageValidator.RealTime`);
 	if(is_realtime) {
-		vscode.window.onDidChangeActiveTextEditor(processText); // switch tab
-		vscode.workspace.onDidChangeTextDocument(e => {	processText(vscode.window.activeTextEditor); }); // modify text
+		const activeEditorDisposable = vscode.window.onDidChangeActiveTextEditor(processText); // switch tab
+		const textDocumentDisposable = vscode.workspace.onDidChangeTextDocument(e => { processText(vscode.window.activeTextEditor); }); // modify text
+		context.subscriptions.push(activeEditorDisposable, textDocumentDisposable);
 	}
 
 }
