@@ -39,16 +39,21 @@
 						"default": "#f00f",
 						"description": "Format: #RGB, #RGBA, #RRGGBB, #RRGGBBAA"
 					},
-					"codepageValidator.Style.Background": {
-						"type": "string",
-						"default": "#fff0",
-						"description": "Format: #RGB, #RGBA, #RRGGBB, #RRGGBBAA"
-					},
-					"codepageValidator.RealTime": {
-						"type": "boolean",
-						"default": true,
-						"description": "Validate codepage when modifying text (Need reload)"
-					}
+                                        "codepageValidator.Style.Background": {
+                                                "type": "string",
+                                                "default": "#fff0",
+                                                "description": "Format: #RGB, #RGBA, #RRGGBB, #RRGGBBAA"
+                                        },
+                                        "codepageValidator.UseDocumentEncoding": {
+                                                "type": "boolean",
+                                                "default": true,
+                                                "description": "Automatically use TextDocument.encoding when available"
+                                        },
+                                        "codepageValidator.RealTime": {
+                                                "type": "boolean",
+                                                "default": true,
+                                                "description": "Validate codepage when modifying text (Need reload)"
+                                        }
 				}
 			}
 		]
