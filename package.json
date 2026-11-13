@@ -1,0 +1,54 @@
+{
+  "name": "codepage-validator",
+  "displayName": "Codepage Validator",
+  "description": "Find characters that cannot be saved unchanged in a target encoding.",
+  "version": "1.0.0",
+  "publisher": "sgqy",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/sgqy/codepage-validator.git" },
+  "type": "module",
+  "engines": { "vscode": "^1.146.0", "node": ">=24" },
+  "categories": ["Linters"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./dist/extension.cjs",
+  "contributes": {
+    "commands": [{ "command": "codepageValidator.validate", "title": "Validate Current File", "category": "Codepage Validator" }],
+    "configuration": {
+      "title": "Codepage Validator",
+      "properties": {
+        "codepageValidator.encoding": {
+          "type": "string",
+          "default": "auto",
+          "minLength": 1,
+          "scope": "resource",
+          "markdownDescription": "Target encoding, such as `shiftjis` or `windows1252`. Use `auto` to follow the document's saving encoding."
+        },
+        "codepageValidator.liveValidation": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Validate visible documents automatically while editing."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "test": "npm run check && node --test tests/unit/encoding.test.ts",
+    "test:integration": "npm run build && node tests/run.mjs",
+    "vscode:prepublish": "npm run check && npm run build",
+    "package": "vsce package --no-dependencies"
+  },
+  "dependencies": { "iconv-lite": "^0.7.3" },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "@types/vscode": "1.146.0",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^4.1.1",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2"
+  },
+  "overrides": { "@vscode/vsce": { "minimatch": "^11.0.1" } }
+}
