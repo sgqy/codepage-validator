@@ -16,51 +16,29 @@ exports.run = async () => {
   const extension = vscode.extensions.getExtension('sgqy.codepage-validator');
   assert.ok(extension);
   await extension.activate();
-  const config = vscode.workspace.getConfiguration('codepageValidator');
   try {
-    const document = await vscode.workspace.openTextDocument({ content: '日本語😀', language: 'typescript', encoding: 'utf8' });
-    const editor = await vscode.window.showTextDocument(document);
-    await vscode.commands.executeCommand('codepageValidator.validate');
-    assert.equal(issues(document).length, 0);
+    const unicode = await vscode.workspace.openTextDocument({ content: '日本語¥😀', language: 'typescript', encoding: 'utf8' });
+    await vscode.window.showTextDocument(unicode);
+    const document = await vscode.workspace.openTextDocument({ content: '日本語¥😀', encoding: 'shiftjis' });
+    const editor = await vscode.window.showTextDocument(document, vscode.ViewColumn.Beside);
+    await eventually(() => issues(document).length === 2);
+    assert.equal(issues(unicode).length, 0);
+    assert.deepEqual(issues(document).map(issue => [issue.range.start.character, issue.range.end.character]), [[3, 4], [4, 6]]);
+    for (const issue of issues(document)) {
+      assert.equal(issue.severity, vscode.DiagnosticSeverity.Warning);
+      assert.match(issue.message, /shiftjis/);
+    }
 
-    await config.update('encoding', 'shiftjis', vscode.ConfigurationTarget.Global);
-    await eventually(() => issues(document).length === 1);
-    assert.equal(issues(document)[0].range.start.character, 3);
-    assert.equal(issues(document)[0].range.end.character, 5);
-
-    await editor.edit(edit => edit.replace(new vscode.Range(0, 3, 0, 5), '語'));
+    await editor.edit(edit => edit.replace(new vscode.Range(0, 3, 0, 6), '語'));
     await eventually(() => issues(document).length === 0);
     await editor.edit(edit => edit.insert(new vscode.Position(0, 4), '😀'));
     await eventually(() => issues(document).length === 1);
 
-    await config.update('liveValidation', false, vscode.ConfigurationTarget.Global);
-    await eventually(() => issues(document).length === 0);
-    await vscode.commands.executeCommand('codepageValidator.validate');
-    assert.equal(issues(document).length, 1);
-    await editor.edit(edit => edit.insert(new vscode.Position(0, 0), 'a'));
-    await eventually(() => issues(document).length === 0);
-    await new Promise(resolve => setTimeout(resolve, 250));
-    assert.equal(issues(document).length, 0);
-
-    await config.update('encoding', 'invalid-codepage', vscode.ConfigurationTarget.Global);
-    await vscode.commands.executeCommand('codepageValidator.validate');
-    assert.match(issues(document)[0].message, /Unsupported encoding/);
-
-    await config.update('encoding', 'auto', vscode.ConfigurationTarget.Global);
-    await config.update('liveValidation', true, vscode.ConfigurationTarget.Global);
-    await eventually(() => issues(document).length === 0);
-
-    const legacy = await vscode.workspace.openTextDocument({ content: '日本語😀', encoding: 'shiftjis' });
-    await vscode.window.showTextDocument(legacy, vscode.ViewColumn.Beside);
-    await eventually(() => issues(legacy).length === 1);
-    assert.equal(issues(document).length, 0);
     await vscode.commands.executeCommand('workbench.action.revertAndCloseActiveEditor');
-    await eventually(() => issues(legacy).length === 0);
-    console.log('Passed: automatic diagnostics, UTF-16 ranges, edits, live/manual modes, invalid encoding, document encoding, split editors, close cleanup.');
+    await eventually(() => issues(document).length === 0);
+    assert.equal(issues(unicode).length, 0);
+    console.log('Passed: current document encoding, CP932 yen mapping, warning severity, UTF-16 ranges, live edits, split editors, close cleanup.');
   } finally {
-    for (const key of ['encoding', 'liveValidation']) {
-      await config.update(key, undefined, vscode.ConfigurationTarget.Global);
-    }
     await vscode.commands.executeCommand('workbench.action.revertAndCloseActiveEditor');
   }
 };

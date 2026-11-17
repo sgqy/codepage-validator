@@ -31,6 +31,14 @@ test('characters with non-identical round trips are also lossy', () => {
   });
 });
 
+test('CP932 distinguishes yen from backslash and wave dash from fullwidth tilde', () => {
+  assert.deepEqual(validateEncoding('¥\\〜～', 'cp932'), {
+    kind: 'checked', encoding: 'cp932', characters: [
+      { start: 0, end: 1, character: '¥' }, { start: 2, end: 3, character: '〜' },
+    ],
+  });
+});
+
 test('repeated characters keep every occurrence and position', () => {
   assert.deepEqual(validateEncoding('😀a😀', 'ascii'), {
     kind: 'checked', encoding: 'ascii', characters: [
